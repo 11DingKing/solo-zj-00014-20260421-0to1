@@ -133,8 +133,9 @@
 </script>
 
 <div class="page-header">
-	<h1>⚙️ 后台管理</h1>
+	<h1>⚙️ 后台管理 - 图书</h1>
 	<div class="header-actions">
+		<a href="/admin/categories" class="btn-secondary">分类管理</a>
 		<a href="/admin/orders" class="btn-secondary">订单管理</a>
 		<button class="btn-primary" on:click={openAddModal}>添加图书</button>
 	</div>
