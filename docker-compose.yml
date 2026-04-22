@@ -25,7 +25,18 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: bookstore_backend
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "
+        while ! python manage.py inspectdb > /dev/null 2>&1; do
+          echo 'Waiting for PostgreSQL...';
+          sleep 2;
+        done;
+        echo 'PostgreSQL is ready!';
+        python manage.py makemigrations books carts orders;
+        python manage.py migrate;
+        echo 'Migrations completed!';
+        python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - ./backend:/app
     environment:
@@ -53,6 +64,7 @@ services:
     environment:
       - PORT=3000
       - HOST=0.0.0.0
+      - ORIGIN=http://localhost:3000
     depends_on:
       - backend
     networks:
