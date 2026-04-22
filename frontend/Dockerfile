@@ -1,13 +1,26 @@
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json ./
 
 RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+RUN npm run build
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOST=0.0.0.0
+
+CMD ["node", "build/index.js"]

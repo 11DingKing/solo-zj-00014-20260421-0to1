@@ -48,14 +48,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: bookstore_frontend
-    command: npm run dev -- --host 0.0.0.0
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     ports:
-      - "5173:5173"
+      - "3001:3000"
     environment:
-      - PUBLIC_API_URL=http://localhost:8000/api
+      - PORT=3000
+      - HOST=0.0.0.0
     depends_on:
       - backend
     networks:
